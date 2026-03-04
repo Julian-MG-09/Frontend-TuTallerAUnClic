@@ -1,0 +1,23 @@
+# Layout
+touch src/layouts/AdminLayout.jsx
+
+# Páginas admin
+touch src/pages/admin/Dashboard.jsx
+touch src/pages/admin/Usuarios.jsx
+touch src/pages/admin/Establecimientos.jsx
+touch src/pages/admin/Servicios.jsx
+touch src/pages/admin/Prestaciones.jsx
+touch src/pages/admin/Calificaciones.jsx
+touch src/pages/admin/Notificaciones.jsx
+touch src/pages/admin/Vehiculos.jsx
+touch src/pages/admin/Roles.jsx
+
+# Componentes del layout
+touch src/components/Sidebar.jsx
+touch src/components/TopBar.jsx
+
+# Rutas
+touch src/routes/AdminRoutes.jsx
+
+# Servicios API
+touch src/services/api.js
