@@ -14,8 +14,8 @@ export const adminService = {
   deleteEstablecimiento: (id) => api.delete(`/api/admin/establecimientos/${id}/`),
 
   // Servicios
-  getServicios:      () => api.get('/servicios/'),
-  createServicio:    (data) => api.post('/servicios/crear/', data),
+  getServicios:   () => api.get('/api/admin/servicios/'), 
+  createServicio: (data) => api.post('/api/admin/servicios/', data),
   updateServicio:    (id, data) => api.patch(`/api/admin/servicios/${id}/`, data),
   deleteServicio:    (id) => api.delete(`/api/admin/servicios/${id}/`),
 

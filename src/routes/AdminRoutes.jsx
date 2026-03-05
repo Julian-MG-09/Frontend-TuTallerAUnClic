@@ -12,6 +12,7 @@ import Vehiculos        from '../pages/admin/Vehiculos'
 import Roles            from '../pages/admin/Roles'
 import TiposEstablecimiento from '../pages/admin/TiposEstablecimiento'
 import TiposServicio from '../pages/admin/TiposServicio'
+import Agenda from '../pages/admin/Agenda'
 
 export default function AdminRoutes() {
   return (
@@ -30,6 +31,7 @@ export default function AdminRoutes() {
         <Route path="establecimientos" element={<Establecimientos />} />
         <Route path="servicios"        element={<Servicios />} />
         <Route path="prestaciones"     element={<Prestaciones />} />
+        <Route path="agenda" element={<Agenda />} />
         <Route path="calificaciones"   element={<Calificaciones />} />
         <Route path="notificaciones"   element={<Notificaciones />} />
         <Route path="vehiculos"        element={<Vehiculos />} />

@@ -3,6 +3,7 @@ import Modal from '../../components/Modal'
 import ConfirmDialog from '../../components/ConfirmDialog'
 import { adminService } from '../../services/adminService'
 import { useAdminData } from '../../hooks/useAdminData'
+import MapPicker from '../../components/MapPicker'
 
 const EMPTY_FORM = {
   nombre: '', direccion: '', telefono: '',
@@ -157,9 +158,15 @@ export default function Establecimientos() {
               <Field label="Hora apertura" type="time" value={form.hora_apertura} onChange={v => setForm(f => ({ ...f, hora_apertura: v }))} />
               <Field label="Hora cierre" type="time" value={form.hora_cierre} onChange={v => setForm(f => ({ ...f, hora_cierre: v }))} />
             </div>
-            <div className="grid grid-cols-2 gap-3">
-              <Field label="Latitud" value={form.latitud} onChange={v => setForm(f => ({ ...f, latitud: v }))} />
-              <Field label="Longitud" value={form.longitud} onChange={v => setForm(f => ({ ...f, longitud: v }))} />
+            <div>
+                <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">
+                  Ubicacion en el mapa
+                </label>
+                <MapPicker
+                  lat={form.latitud}
+                  lng={form.longitud}
+                  onChange={(lat, lng) => setForm(f => ({ ...f, latitud: lat.toFixed(6), longitud: lng.toFixed(6) }))}
+                />
             </div>
             <div>
               <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Tipo de establecimiento</label>

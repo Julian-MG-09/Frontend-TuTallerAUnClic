@@ -8,6 +8,7 @@ const links = [
   { to: '/admin/tipos-servicio',label: 'Tipos Servicio' },
   { to: '/admin/servicios',       label: 'Servicios' },
   { to: '/admin/prestaciones',    label: 'Prestaciones' },
+  { to: '/admin/agenda',          label: 'Agenda' },
   { to: '/admin/calificaciones',  label: 'Calificaciones' },
   { to: '/admin/notificaciones',  label: 'Notificaciones' },
   { to: '/admin/vehiculos',       label: 'Vehiculos' },
