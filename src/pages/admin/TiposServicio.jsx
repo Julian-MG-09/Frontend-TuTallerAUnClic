@@ -1,13 +1,15 @@
 import { useState } from 'react'
 import Modal from '../../components/Modal'
 import ConfirmDialog from '../../components/ConfirmDialog'
-import { adminService } from '../../services/adminService'
+import api from '../../services/api'
 import { useAdminData } from '../../hooks/useAdminData'
 
-const EMPTY_FORM = { nombre: '', descripcion: '', activo: true }
+const EMPTY_FORM = { nombre: '' }
 
-export default function Roles() {
-  const { data: roles, setData: setRoles, loading, error, reload } = useAdminData(adminService.getRoles)
+export default function TiposServicio() {
+  const { data: tipos, setData: setTipos, loading, error, reload } = useAdminData(
+    () => api.get('/tipos-servicio/')
+  )
 
   const [search, setSearch]         = useState('')
   const [showModal, setShowModal]   = useState(false)
@@ -17,19 +19,22 @@ export default function Roles() {
   const [saving, setSaving]         = useState(false)
   const [formError, setFormError]   = useState('')
 
-  const filtered = roles.filter(r =>
-    `${r.nombre} ${r.descripcion}`.toLowerCase().includes(search.toLowerCase())
+  const filtered = tipos.filter(t =>
+    t.nombre.toLowerCase().includes(search.toLowerCase())
   )
 
   function openCreate() { setEditTarget(null); setForm(EMPTY_FORM); setFormError(''); setShowModal(true) }
-  function openEdit(r) { setEditTarget(r); setForm({ nombre: r.nombre, descripcion: r.descripcion, activo: r.activo }); setFormError(''); setShowModal(true) }
+  function openEdit(t) { setEditTarget(t); setForm({ nombre: t.nombre }); setFormError(''); setShowModal(true) }
 
   async function handleSave() {
     if (!form.nombre) { setFormError('El nombre es obligatorio'); return }
     setSaving(true); setFormError('')
     try {
-      if (editTarget) { await adminService.updateRol(editTarget.id, form) }
-      else { await adminService.createRol(form) }
+      if (editTarget) {
+        await api.patch(`/api/admin/tipos-servicio/${editTarget.id}/`, form)
+      } else {
+        await api.post('/api/admin/tipos-servicio/', form)
+      }
       await reload(); setShowModal(false)
     } catch { setFormError('Error al guardar.') }
     finally { setSaving(false) }
@@ -37,8 +42,8 @@ export default function Roles() {
 
   async function handleDelete() {
     try {
-      await adminService.deleteRol(confirmId)
-      setRoles(prev => prev.filter(r => r.id !== confirmId))
+      await api.delete(`/api/admin/tipos-servicio/${confirmId}/`)
+      setTipos(prev => prev.filter(t => t.id !== confirmId))
     } catch { alert('Error al eliminar') }
     finally { setConfirmId(null) }
   }
@@ -50,14 +55,14 @@ export default function Roles() {
     <div>
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-semibold text-gray-800 dark:text-gray-100">Roles</h1>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">Gestion de roles y permisos del sistema</p>
+          <h1 className="text-2xl font-semibold text-gray-800 dark:text-gray-100">Tipos de Servicio</h1>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">Categorias de servicios ofrecidos en la plataforma</p>
         </div>
-        <button onClick={openCreate} className="px-4 py-2 text-sm bg-blue-600 hover:bg-blue-700 text-white rounded-md transition-colors">Nuevo rol</button>
+        <button onClick={openCreate} className="px-4 py-2 text-sm bg-blue-600 hover:bg-blue-700 text-white rounded-md transition-colors">Nuevo tipo</button>
       </div>
 
       <div className="mb-4">
-        <input type="text" placeholder="Buscar por nombre o descripcion..." value={search} onChange={e => setSearch(e.target.value)}
+        <input type="text" placeholder="Buscar tipo..." value={search} onChange={e => setSearch(e.target.value)}
           className="w-full sm:w-80 px-3 py-2 text-sm rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500" />
       </div>
 
@@ -65,30 +70,22 @@ export default function Roles() {
         <table className="w-full text-sm">
           <thead className="bg-gray-50 dark:bg-gray-800 text-gray-600 dark:text-gray-400 uppercase text-xs tracking-wide">
             <tr>
+              <th className="px-4 py-3 text-left">ID</th>
               <th className="px-4 py-3 text-left">Nombre</th>
-              <th className="px-4 py-3 text-left">Descripcion</th>
-              <th className="px-4 py-3 text-left">Estado</th>
-              <th className="px-4 py-3 text-left">Fecha creacion</th>
               <th className="px-4 py-3 text-left">Acciones</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-100 dark:divide-gray-700">
             {filtered.length === 0 ? (
-              <tr><td colSpan={5} className="px-4 py-8 text-center text-gray-400 dark:text-gray-500">No se encontraron roles</td></tr>
-            ) : filtered.map(r => (
-              <tr key={r.id} className="bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-                <td className="px-4 py-3 font-medium text-gray-800 dark:text-gray-100">{r.nombre}</td>
-                <td className="px-4 py-3 text-gray-600 dark:text-gray-300 max-w-xs truncate">{r.descripcion}</td>
-                <td className="px-4 py-3">
-                  <span className={`px-2 py-0.5 rounded text-xs font-medium ${r.activo ? 'bg-green-50 dark:bg-green-950 text-green-600 dark:text-green-400' : 'bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400'}`}>
-                    {r.activo ? 'Activo' : 'Inactivo'}
-                  </span>
-                </td>
-                <td className="px-4 py-3 text-gray-600 dark:text-gray-300">{r.fecha_creacion?.split('T')[0] ?? '-'}</td>
+              <tr><td colSpan={3} className="px-4 py-8 text-center text-gray-400 dark:text-gray-500">No se encontraron tipos</td></tr>
+            ) : filtered.map(t => (
+              <tr key={t.id} className="bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                <td className="px-4 py-3 text-gray-400 dark:text-gray-500 text-xs">#{t.id}</td>
+                <td className="px-4 py-3 font-medium text-gray-800 dark:text-gray-100">{t.nombre}</td>
                 <td className="px-4 py-3">
                   <div className="flex gap-2">
-                    <button onClick={() => openEdit(r)} className="px-3 py-1 text-xs rounded border border-blue-300 dark:border-blue-700 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-950 transition-colors">Editar</button>
-                    <button onClick={() => setConfirmId(r.id)} className="px-3 py-1 text-xs rounded border border-red-300 dark:border-red-800 text-red-500 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950 transition-colors">Eliminar</button>
+                    <button onClick={() => openEdit(t)} className="px-3 py-1 text-xs rounded border border-blue-300 dark:border-blue-700 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-950 transition-colors">Editar</button>
+                    <button onClick={() => setConfirmId(t.id)} className="px-3 py-1 text-xs rounded border border-red-300 dark:border-red-800 text-red-500 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950 transition-colors">Eliminar</button>
                   </div>
                 </td>
               </tr>
@@ -97,37 +94,28 @@ export default function Roles() {
         </table>
       </div>
 
-      <p className="mt-3 text-xs text-gray-400 dark:text-gray-500">{filtered.length} rol{filtered.length !== 1 ? 'es' : ''} encontrado{filtered.length !== 1 ? 's' : ''}</p>
+      <p className="mt-3 text-xs text-gray-400 dark:text-gray-500">{filtered.length} tipo{filtered.length !== 1 ? 's' : ''} encontrado{filtered.length !== 1 ? 's' : ''}</p>
 
       {showModal && (
-        <Modal title={editTarget ? 'Editar rol' : 'Nuevo rol'} onClose={() => setShowModal(false)}>
+        <Modal title={editTarget ? 'Editar tipo' : 'Nuevo tipo'} onClose={() => setShowModal(false)}>
           <div className="flex flex-col gap-4">
             <div>
               <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Nombre</label>
               <input type="text" value={form.nombre} onChange={e => setForm(f => ({ ...f, nombre: e.target.value }))}
                 className="w-full px-3 py-2 text-sm rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500" />
             </div>
-            <div>
-              <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Descripcion</label>
-              <textarea value={form.descripcion} onChange={e => setForm(f => ({ ...f, descripcion: e.target.value }))} rows={3}
-                className="w-full px-3 py-2 text-sm rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none" />
-            </div>
-            <label className="flex items-center gap-2 cursor-pointer">
-              <input type="checkbox" checked={form.activo} onChange={e => setForm(f => ({ ...f, activo: e.target.checked }))} className="accent-blue-600" />
-              <span className="text-sm text-gray-700 dark:text-gray-300">Rol activo</span>
-            </label>
             {formError && <p className="text-xs text-red-500 bg-red-50 dark:bg-red-950 px-3 py-2 rounded">{formError}</p>}
             <div className="flex justify-end gap-3 pt-2">
               <button onClick={() => setShowModal(false)} className="px-4 py-2 text-sm rounded-md border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">Cancelar</button>
               <button onClick={handleSave} disabled={saving} className="px-4 py-2 text-sm rounded-md bg-blue-600 hover:bg-blue-700 disabled:opacity-60 text-white transition-colors flex items-center gap-2">
                 {saving && <span className="w-3 h-3 rounded-full border-2 border-white border-t-transparent animate-spin" />}
-                {editTarget ? 'Guardar cambios' : 'Crear rol'}
+                {editTarget ? 'Guardar cambios' : 'Crear tipo'}
               </button>
             </div>
           </div>
         </Modal>
       )}
-      {confirmId && <ConfirmDialog message="Esta accion eliminara el rol permanentemente. Deseas continuar?" onConfirm={handleDelete} onCancel={() => setConfirmId(null)} />}
+      {confirmId && <ConfirmDialog message="Esta accion eliminara el tipo permanentemente. Deseas continuar?" onConfirm={handleDelete} onCancel={() => setConfirmId(null)} />}
     </div>
   )
 }

@@ -10,6 +10,8 @@ import Calificaciones   from '../pages/admin/Calificaciones'
 import Notificaciones   from '../pages/admin/Notificaciones'
 import Vehiculos        from '../pages/admin/Vehiculos'
 import Roles            from '../pages/admin/Roles'
+import TiposEstablecimiento from '../pages/admin/TiposEstablecimiento'
+import TiposServicio from '../pages/admin/TiposServicio'
 
 export default function AdminRoutes() {
   return (
@@ -32,6 +34,8 @@ export default function AdminRoutes() {
         <Route path="notificaciones"   element={<Notificaciones />} />
         <Route path="vehiculos"        element={<Vehiculos />} />
         <Route path="roles"            element={<Roles />} />
+        <Route path="tipos-establecimiento" element={<TiposEstablecimiento />} />
+        <Route path="tipos-servicio"        element={<TiposServicio />} />
       </Route>
     </Routes>
   )

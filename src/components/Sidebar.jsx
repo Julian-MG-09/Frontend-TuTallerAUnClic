@@ -4,6 +4,8 @@ const links = [
   { to: '/admin/dashboard',       label: 'Dashboard' },
   { to: '/admin/usuarios',        label: 'Usuarios' },
   { to: '/admin/establecimientos',label: 'Establecimientos' },
+  { to: '/admin/tipos-establecimiento',label: 'Tipos Establecimiento' },
+  { to: '/admin/tipos-servicio',label: 'Tipos Servicio' },
   { to: '/admin/servicios',       label: 'Servicios' },
   { to: '/admin/prestaciones',    label: 'Prestaciones' },
   { to: '/admin/calificaciones',  label: 'Calificaciones' },
