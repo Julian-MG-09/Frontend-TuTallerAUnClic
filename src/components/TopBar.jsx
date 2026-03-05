@@ -1,18 +1,20 @@
 import { useState, useRef, useEffect } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import { useTheme } from '../context/ThemeContext'
-import { Link } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext'
 
 const NAV_LINKS = [
   { to: '/entretenimiento', label: 'Entretenimiento' },
 ]
 
 export default function TopBar({ open, setOpen }) {
-  const { dark, setDark }         = useTheme()
-  const [userMenu, setUserMenu]   = useState(false)
+  const { dark, setDark }             = useTheme()
+  const { user, logout }              = useAuth()
+  const navigate                      = useNavigate()
+  const [userMenu, setUserMenu]       = useState(false)
   const [deleteModal, setDeleteModal] = useState(false)
-  const menuRef = useRef(null)
+  const menuRef                       = useRef(null)
 
-  // Cerrar menú al hacer clic fuera
   useEffect(() => {
     function handleClickOutside(e) {
       if (menuRef.current && !menuRef.current.contains(e.target)) {
@@ -23,6 +25,11 @@ export default function TopBar({ open, setOpen }) {
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
 
+  function handleLogout() {
+    logout()
+    navigate('/login')
+  }
+
   return (
     <>
       <header
@@ -32,7 +39,6 @@ export default function TopBar({ open, setOpen }) {
           transition-all duration-300"
         style={{ left: open ? '14rem' : '4rem' }}
       >
-        {/* Izquierda: boton colapsar + nav links */}
         <div className="flex items-center gap-6">
           <button
             onClick={() => setOpen(!open)}
@@ -44,7 +50,6 @@ export default function TopBar({ open, setOpen }) {
             <span className="block h-0.5 w-5 bg-current rounded" />
           </button>
 
-          {/* Nav links */}
           <nav className="hidden sm:flex items-center gap-1">
             {NAV_LINKS.map(link => (
               <Link
@@ -58,14 +63,11 @@ export default function TopBar({ open, setOpen }) {
           </nav>
         </div>
 
-        {/* Derecha: tema + usuario */}
         <div className="flex items-center gap-3">
 
-          {/* Toggle tema */}
           <button
             onClick={() => setDark(!dark)}
-            className="relative w-11 h-6 rounded-full transition-colors duration-300 focus:outline-none
-              bg-gray-200 dark:bg-blue-600"
+            className="relative w-11 h-6 rounded-full transition-colors duration-300 focus:outline-none bg-gray-200 dark:bg-blue-600"
             aria-label="Toggle dark mode"
           >
             <span className={`absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-white shadow transition-transform duration-300 flex items-center justify-center text-xs
@@ -75,24 +77,26 @@ export default function TopBar({ open, setOpen }) {
             </span>
           </button>
 
-          {/* Divisor */}
           <div className="h-6 w-px bg-gray-200 dark:bg-gray-700" />
 
-          {/* Menu usuario */}
           <div className="relative" ref={menuRef}>
             <button
               onClick={() => setUserMenu(v => !v)}
               className="flex items-center gap-2.5 px-2 py-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
             >
-              {/* Avatar */}
               <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center shrink-0">
-                <span className="text-white text-xs font-bold">A</span>
+                <span className="text-white text-xs font-bold">
+                  {user?.username?.[0]?.toUpperCase() ?? 'A'}
+                </span>
               </div>
               <div className="hidden sm:flex flex-col items-start leading-tight">
-                <span className="text-sm font-medium text-gray-800 dark:text-gray-100">Admin</span>
-                <span className="text-xs text-gray-400 dark:text-gray-500">Administrador</span>
+                <span className="text-sm font-medium text-gray-800 dark:text-gray-100">
+                  {user?.username ?? 'Admin'}
+                </span>
+                <span className="text-xs text-gray-400 dark:text-gray-500">
+                  {user?.rol_nombre ?? 'Administrador'}
+                </span>
               </div>
-              {/* Chevron */}
               <svg
                 className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${userMenu ? 'rotate-180' : ''}`}
                 fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}
@@ -101,17 +105,17 @@ export default function TopBar({ open, setOpen }) {
               </svg>
             </button>
 
-            {/* Dropdown */}
             {userMenu && (
               <div className="absolute right-0 top-full mt-2 w-52 bg-white dark:bg-gray-900 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden z-50">
-
-                {/* Info usuario */}
                 <div className="px-4 py-3 border-b border-gray-100 dark:border-gray-800">
-                  <p className="text-xs font-semibold text-gray-800 dark:text-gray-100">Admin</p>
-                  <p className="text-xs text-gray-400 dark:text-gray-500 truncate">admin@tutaller.com</p>
+                  <p className="text-xs font-semibold text-gray-800 dark:text-gray-100">
+                    {user?.username ?? 'Admin'}
+                  </p>
+                  <p className="text-xs text-gray-400 dark:text-gray-500 truncate">
+                    {user?.email ?? ''}
+                  </p>
                 </div>
 
-                {/* Opciones */}
                 <div className="py-1">
                   <Link
                     to="/admin/perfil"
@@ -125,7 +129,7 @@ export default function TopBar({ open, setOpen }) {
                   </Link>
 
                   <button
-                    onClick={() => { setUserMenu(false); alert('Cerrando sesion...') }}
+                    onClick={() => { setUserMenu(false); handleLogout() }}
                     className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
                   >
                     <svg className="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
@@ -135,7 +139,6 @@ export default function TopBar({ open, setOpen }) {
                   </button>
                 </div>
 
-                {/* Zona peligrosa */}
                 <div className="border-t border-gray-100 dark:border-gray-800 py-1">
                   <button
                     onClick={() => { setUserMenu(false); setDeleteModal(true) }}
@@ -153,13 +156,11 @@ export default function TopBar({ open, setOpen }) {
         </div>
       </header>
 
-      {/* Modal eliminar cuenta */}
       {deleteModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center">
           <div className="absolute inset-0 bg-black/40 dark:bg-black/60" onClick={() => setDeleteModal(false)} />
           <div className="relative z-10 w-full max-w-md mx-4 bg-white dark:bg-gray-900 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700">
             <div className="px-6 py-5">
-              {/* Icono advertencia */}
               <div className="flex items-center gap-4 mb-4">
                 <div className="w-10 h-10 rounded-full bg-red-100 dark:bg-red-950 flex items-center justify-center shrink-0">
                   <svg className="w-5 h-5 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -171,11 +172,9 @@ export default function TopBar({ open, setOpen }) {
                   <p className="text-sm text-gray-500 dark:text-gray-400">Esta accion no se puede deshacer</p>
                 </div>
               </div>
-
               <p className="text-sm text-gray-600 dark:text-gray-400 mb-6 leading-relaxed">
                 Se eliminaran permanentemente todos tus datos, historial de citas, establecimientos y configuraciones asociadas a esta cuenta.
               </p>
-
               <div className="flex justify-end gap-3">
                 <button
                   onClick={() => setDeleteModal(false)}

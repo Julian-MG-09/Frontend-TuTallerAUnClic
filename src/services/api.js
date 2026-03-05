@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const api = axios.create({
-  baseURL: 'http://localhost:8000/api',
+  baseURL: 'http://localhost:8000',
   headers: {
     'Content-Type': 'application/json',
   },
@@ -14,5 +14,37 @@ api.interceptors.request.use((config) => {
   }
   return config
 })
+
+api.interceptors.response.use(
+  response => response,
+  async error => {
+    const original = error.config
+
+    // Si el token expiró, intentar refrescarlo
+    if (error.response?.status === 401 && !original._retry) {
+      original._retry = true
+      const refresh = localStorage.getItem('refresh_token')
+
+      if (refresh) {
+        try {
+          const res = await axios.post('http://localhost:8000/usuarios/login/refresh/', {
+            refresh,
+          })
+          localStorage.setItem('access_token', res.data.access)
+          original.headers.Authorization = `Bearer ${res.data.access}`
+          return api(original)
+        } catch {
+          localStorage.clear()
+          window.location.href = '/login'
+        }
+      } else {
+        localStorage.clear()
+        window.location.href = '/login'
+      }
+    }
+
+    return Promise.reject(error)
+  }
+)
 
 export default api
