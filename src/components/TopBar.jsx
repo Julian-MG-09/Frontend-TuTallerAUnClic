@@ -84,10 +84,14 @@ export default function TopBar({ open, setOpen }) {
               onClick={() => setUserMenu(v => !v)}
               className="flex items-center gap-2.5 px-2 py-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
             >
-              <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center shrink-0">
-                <span className="text-white text-xs font-bold">
-                  {user?.username?.[0]?.toUpperCase() ?? 'A'}
-                </span>
+              <div className="w-8 h-8 rounded-full overflow-hidden bg-blue-600 flex items-center justify-center shrink-0">
+                {user?.foto_url ? (
+                  <img src={user.foto_url} alt="avatar" className="w-full h-full object-cover" />
+                ) : (
+                  <span className="text-white text-xs font-bold">
+                    {user?.username?.[0]?.toUpperCase() ?? 'A'}
+                  </span>
+                )}
               </div>
               <div className="hidden sm:flex flex-col items-start leading-tight">
                 <span className="text-sm font-medium text-gray-800 dark:text-gray-100">

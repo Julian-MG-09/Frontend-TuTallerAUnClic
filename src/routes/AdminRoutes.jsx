@@ -13,6 +13,7 @@ import Roles            from '../pages/admin/Roles'
 import TiposEstablecimiento from '../pages/admin/TiposEstablecimiento'
 import TiposServicio from '../pages/admin/TiposServicio'
 import Agenda from '../pages/admin/Agenda'
+import Perfil from '../pages/admin/Perfil'
 
 export default function AdminRoutes() {
   return (
@@ -38,6 +39,7 @@ export default function AdminRoutes() {
         <Route path="roles"            element={<Roles />} />
         <Route path="tipos-establecimiento" element={<TiposEstablecimiento />} />
         <Route path="tipos-servicio"        element={<TiposServicio />} />
+        <Route path="perfil" element={<Perfil />} />
       </Route>
     </Routes>
   )
