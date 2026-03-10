@@ -14,6 +14,7 @@ import TiposEstablecimiento from '../pages/admin/TiposEstablecimiento'
 import TiposServicio from '../pages/admin/TiposServicio'
 import Agenda from '../pages/admin/Agenda'
 import Perfil from '../pages/admin/Perfil'
+import Anuncios from '../pages/admin/Anuncios'
 
 export default function AdminRoutes() {
   return (
@@ -28,6 +29,7 @@ export default function AdminRoutes() {
       >
         <Route index element={<Navigate to="dashboard" replace />} />
         <Route path="dashboard"        element={<Dashboard />} />
+        <Route path="anuncios" element={<Anuncios />} />
         <Route path="usuarios"         element={<Usuarios />} />
         <Route path="establecimientos" element={<Establecimientos />} />
         <Route path="servicios"        element={<Servicios />} />

@@ -149,7 +149,7 @@ function CarruselAnuncios({ anuncios }) {
 
   return (
     <section className="py-16 px-4">
-      <div className="max-w-5xl mx-auto">
+      <div className="max-w-8xl mx-auto">
         <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100 text-center mb-8">Anuncios y promociones</h2>
         <div
           className="relative rounded-2xl overflow-hidden shadow-2xl cursor-grab active:cursor-grabbing select-none"
