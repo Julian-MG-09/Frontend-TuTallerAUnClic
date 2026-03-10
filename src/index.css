@@ -44,3 +44,21 @@ header:hover .lightning-ray {
     opacity: 0;
   }
 }
+
+@keyframes progress-bar {
+  from { width: 0% }
+  to   { width: 100% }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(10px) }
+  to   { opacity: 1; transform: translateY(0) }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.8s ease forwards;
+}
+
+.leaflet-container {
+  z-index: 0 !important;
+}
