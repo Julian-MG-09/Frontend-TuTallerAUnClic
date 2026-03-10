@@ -1,7 +1,7 @@
-import { Navigate } from 'react-router-dom'
+import { Navigate, Outlet } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 
-export default function ProtectedRoute({ children, requiredRol }) {
+export default function ProtectedRoute({ requiredRol, children }) {
   const { user, loading } = useAuth()
 
   if (loading) {
@@ -18,5 +18,5 @@ export default function ProtectedRoute({ children, requiredRol }) {
     return <Navigate to="/login" replace />
   }
 
-  return children
+  return children ? children : <Outlet />
 }

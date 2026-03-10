@@ -33,7 +33,7 @@ export default function Login() {
       } else if (rolNombre === 'empresa') {
         navigate('/empresa/dashboard')
       } else {
-        navigate('/cliente/dashboard')
+        navigate('/inicio')
       }
     } catch (err) {
       setError('Usuario o contraseña incorrectos')

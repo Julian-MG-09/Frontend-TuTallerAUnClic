@@ -84,7 +84,7 @@ export default function Register() {
   } else if (rolNombre === 'admin') {
     navigate('/admin/dashboard')
   } else {
-    navigate('/cliente/dashboard')
+    navigate('/inicio')
   }
 
 } catch (err) {
