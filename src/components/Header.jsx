@@ -45,27 +45,30 @@ export default function Header() {
 
   return (
     <>
-      <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300
-        ${scrolled
-          ? 'bg-blue-900/60 dark:bg-blue-950/70 backdrop-blur-md shadow-lg'
-          : 'bg-blue-900/40 dark:bg-blue-950/50 backdrop-blur-sm'
-        }`}
-      >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
+      <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 
+          ${scrolled
+            ? 'bg-blue-950/75 dark:bg-blue-950/80 backdrop-blur-md shadow-lg'
+            : 'bg-blue-800/55 dark:bg-blue-950/60 backdrop-blur-sm'
+          }`}
+        >
+          {/* Efecto rayo */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+            <div className="lightning-ray" />
+        </div>     
+         
+          <div className="max-w-screen-3xl mx-auto px-6 sm:px-10 lg:px-16 z-10">
+            <div className="flex items-center h-16">
 
             {/* Logo */}
-            <Link to="/inicio" className="flex items-center gap-2.5 shrink-0">
-              <div className="w-8 h-8 rounded-lg bg-white/20 backdrop-blur-sm flex items-center justify-center">
-                <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M11.42 15.17L17.25 21A2.652 2.652 0 0021 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.655 5.653a2.548 2.548 0 11-3.586-3.586l6.837-5.63m5.108-.233c.55-.164 1.163-.188 1.743-.14a4.5 4.5 0 004.486-6.336l-3.276 3.277a3.004 3.004 0 01-2.25-2.25l3.276-3.276a4.5 4.5 0 00-6.336 4.486c.091 1.076-.071 2.264-.904 2.95l-.102.085m-1.745 1.437L5.909 7.5H4.5L2.25 3.75l1.5-1.5L7.5 4.5v1.409l4.26 4.26m-1.745 1.437l1.745-1.437m6.615 8.206L15.75 15.75M4.867 19.125h.008v.008h-.008v-.008z" />
-                </svg>
-              </div>
-              <span className="text-white font-bold text-sm tracking-wide hidden sm:block">Tu Taller a un Clic</span>
-            </Link>
+            <div className="flex-none">
+              <Link to="/inicio" className="flex items-center gap-2.5">
+                <img src="/logo_solo.png" alt="Tu Taller a un Clic" className="w-8 h-8 object-contain" />
+                <span className="text-white font-bold text-sm tracking-wide hidden sm:block">Tu Taller a un Clic</span>
+              </Link>
+            </div>
 
             {/* Nav centrado — desktop */}
-            <nav className="hidden lg:flex items-center gap-1">
+            <nav className="hidden lg:flex items-center gap-1 absolute left-1/2 -translate-x-1/2">
               {NAV_LINKS.map(link => (
                 <NavLink
                   key={link.to}
@@ -84,7 +87,7 @@ export default function Header() {
             </nav>
 
             {/* Derecha: tema + usuario */}
-            <div className="flex items-center gap-2">
+            <div className="flex-none ml-auto flex items-center gap-3">
 
               {/* Toggle tema */}
               <button

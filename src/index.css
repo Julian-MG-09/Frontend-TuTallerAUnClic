@@ -1,3 +1,46 @@
 @import "tailwindcss";
 
 @custom-variant dark (&:where(.dark, .dark *));
+
+/* Efecto rayo en header */
+.lightning-ray {
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(
+    105deg,
+    transparent 20%,
+    rgba(255, 255, 255, 0.03) 30%,
+    rgba(255, 255, 255, 0.18) 45%,
+    rgba(180, 210, 255, 0.25) 50%,
+    rgba(255, 255, 255, 0.18) 55%,
+    rgba(255, 255, 255, 0.03) 70%,
+    transparent 80%
+  );
+  pointer-events: none;
+  opacity: 0;
+  z-index: 0;
+}
+
+header:hover .lightning-ray {
+  animation: lightning-sweep 0.55s ease-in-out forwards;
+}
+
+@keyframes lightning-sweep {
+  0% {
+    left: -60%;
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  85% {
+    opacity: 1;
+  }
+  100% {
+    left: 110%;
+    opacity: 0;
+  }
+}
