@@ -5,8 +5,7 @@ import { useTheme } from '../context/ThemeContext'
 
 const NAV_LINKS = [
   { to: '/inicio',           label: 'Inicio' },
-  { to: '/buscar',           label: 'Buscar talleres' },
-  { to: '/establecimientos', label: 'Establecimientos' },
+  { to: '/establecimientos', label: 'Talleres y Lavaderos' },
   { to: '/mapa',             label: 'Mapa' },
   { to: '/mis-citas',        label: 'Mis citas' },
   { to: '/entretenimiento',  label: 'Entretenimiento' },
