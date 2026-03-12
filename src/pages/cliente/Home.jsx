@@ -153,7 +153,7 @@ function CarruselAnuncios({ anuncios }) {
         <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100 text-center mb-8">Anuncios y promociones</h2>
         <div
           className="relative rounded-2xl overflow-hidden shadow-2xl cursor-grab active:cursor-grabbing select-none"
-          style={{ aspectRatio: '16/6', minHeight: '220px' }}
+          style={{ height: 'clamp(200px, 40vw, 800px)' }}
           onMouseEnter={() => setPaused(true)}
           onMouseLeave={() => { setPaused(false); setDragging(false) }}
           onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}

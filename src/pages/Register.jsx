@@ -65,27 +65,25 @@ export default function Register() {
   }
 
   const res = await api.post('/usuarios/register/', {
-    username:   form.username,
-    first_name: form.first_name,
-    last_name:  form.last_name,
-    email:      form.email,
-    telefono:   form.telefono,
-    password:   form.password,
-    rol:        rol.id,
-  })
+  username:   form.username,
+  first_name: form.first_name,
+  last_name:  form.last_name,
+  email:      form.email,
+  telefono:   form.telefono,
+  password:   form.password,
+  rol:        rol.id,
+})
 
-  localStorage.setItem('access_token', res.data.access)
-  localStorage.setItem('refresh_token', res.data.refresh)
+const perfilData = await login(form.username, form.password)
+const rolNombre  = perfilData?.rol_nombre?.toLowerCase()
 
-  const rolNombre = res.data.user.rol_nombre?.toLowerCase()
-
-  if (rolNombre === 'empresa') {
-    navigate('/empresa/dashboard')
-  } else if (rolNombre === 'admin') {
-    navigate('/admin/dashboard')
-  } else {
-    navigate('/inicio')
-  }
+if (rolNombre === 'empresa') {
+  navigate('/empresa/dashboard')
+} else if (rolNombre === 'admin') {
+  navigate('/admin/dashboard')
+} else {
+  navigate('/inicio')
+}
 
 } catch (err) {
   const data = err.response?.data
